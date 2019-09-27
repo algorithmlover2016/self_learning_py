@@ -12,6 +12,7 @@ __version__ = "0.1"
 __all__ = ["SimpleHTTPRequestHandler"]
 __author__ = "bones7456"
 __home_page__ = "http://li2z.cn/"
+LocalFilePath = "./data/already_sop_instances_list.txt"
 
 import os
 import posixpath
@@ -99,9 +100,14 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         # remove \n
         line = self.rfile.readline()
         remainbytes -= len(line)
+        try:
+            out = open(LocalFilePath, 'a+')
+        except IOError:
+            return (False, "Can't create file to write, do you have permission to write %s?" % LocalFilePath)
 
         preline = self.rfile.readline()
         remainbytes -= len(preline)
+        cnt = 0
         while remainbytes > 0:
             line = self.rfile.readline()
             remainbytes -= len(line)
@@ -114,16 +120,17 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                         preline)
                 if matchRet:
                     print "match last: ", len(matchRet)
-
-                # out.write(preline)
-                # out.close()
-                return (True, " upload success!")
+                    cnt += len(matchRet)
+                    out.write("\n".join(matchRet) + "\n")
+                out.close()
+                return (True, "upload %d instances_id success!" % cnt)
             else:
-                # out.write(preline)
                 matchRet = re.findall(r'([a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})',\
                         preline)
                 if matchRet:
-                    print "match: ", matchRet[0]
+                    print "match: ", len(matchRet)
+                    cnt += len(matchRet)
+                    out.write("\n".join(matchRet) + "\n")
                 preline = line
         return (False, "Unexpect Ends of data.")
 
