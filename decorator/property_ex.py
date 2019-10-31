@@ -59,7 +59,7 @@ class Rectangle(object):
     @width.setter
     def width(self, input_width):
         self._width = input_width
-    
+
     @width.deleter
     def width(self):
         del self._width
@@ -81,6 +81,36 @@ class Rectangle(object):
     @height.deleter
     def height(self):
         del self._height
+
+#decorator in class
+class loggingcls(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __call__(self, *args, **kwargs):
+        print "[DEBUG]: enter function {func}()".format(
+                func = self.func.__name__)
+        return self.func(*args, **kwargs)
+
+@loggingcls
+def saycls(something):
+    print "say {}!".format(something)
+
+# https://www.cnblogs.com/cicaday/p/python-decorator.html
+class loggingpara(object):
+    def __init__(self, level = "INFO"):
+        self.level = level
+
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            print "[{level}]: enter function {func}()".format(
+                    level = self.level, func = func.__name__)
+            func(*args, **kwargs)
+        return wrapper
+
+@loggingpara(level = "INFO")
+def saypara(something):
+    print "say {}!".format(something)
 
 # descriptor
 
@@ -129,15 +159,17 @@ if __name__ == "__main__":
 
     s = Rectangle()
     print(s.width, s.height)
-    
+
     s.width = 1024
     s.height = 768
     print(s.width, s.height)
-    
+
     #  s.height = 176.8
     #  print(s.width, s.height)
-    #  
+    #
     #  s.height = 1768
     #  print(s.width, s.height)
-    
-    
+
+    saycls("something cls")
+    saypara("something parameter")
+
