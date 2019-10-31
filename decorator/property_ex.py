@@ -3,6 +3,7 @@
 import functools
 
 def paramLimit(func):
+    # http://book.pythontips.com/en/latest/args_and_kwargs.html
     def wrapper(*args, **kwargs):
         print "[DEBUG]: enter {}()".format(func.__name__)
         return func(*args, **kwargs)
@@ -21,6 +22,16 @@ def logging(level):
         return inner_wrapper
     return wrapper
 
+def log(text):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            print('%s %s():' % (text, func.__name__))
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+@log("execute")
 @logging(level = 'INFO')
 def say(something):
     print "say {}!".format(something)
@@ -70,6 +81,45 @@ class Rectangle(object):
     @height.deleter
     def height(self):
         del self._height
+
+# descriptor
+
+class classproperty(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, klass):
+        return self.func(klass)
+
+class DBManage(object):
+
+    @classmethod
+    def table_name(cls):
+        return cls.__name__.lower()
+
+    @classmethod
+    def select_all(cls):
+        sql = "SELECT * FROM %s""" % cls.table_name()
+        return sql
+
+
+class DBManageProperty(object):
+
+    @classproperty
+    def table_name(cls):
+        return cls.__name__.lower()
+
+    @classmethod
+    def select_all(cls):
+        sql = "SELECT * FROM %s""" % cls.table_name
+        return sql
+
+class User(DBManage):
+    pass
+
+class Post(DBManage):
+    pass
+
 
 if __name__ == "__main__":
     say("hello")
