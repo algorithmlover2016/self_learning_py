@@ -1,6 +1,7 @@
 import re
 
 # (?x) and groups() group() group(id)
+# reference https://www.zhihu.com/question/40865347
 print(re.search(r'''(?x)
             \((\d{3})\) # areacode
             [ ]         # space
