@@ -40,3 +40,38 @@ print(bool(re.match(r'\((?P<areacode>\d{3})\) (?P<prefix>\d{3})-(?P<number>\d{4}
 print(re.sub(r'\((?P<areacode>\d{3})\) (?P<prefix>\d{3})-(?:\d{4})', \
             '(\g<areacode>) \g<prefix>-xxxx', \
             '(800) 555-1212'))
+
+# (?=) and (?!)
+
+# print(re.findall(r'\w+(?= van Rossum),', \
+# none will matched
+# print(re.findall(r'\w+(?= van Rossum) van Rossum,', \
+# will match the same line as the next print sentence
+print(re.findall(r'\w+(?= van Rossum)', \
+            """
+            Guido van Rossum,
+            Tim Peters,
+            Alex Martelli,
+            Just van Rossum,
+            Raymond Hettinger
+            """))
+
+print(re.findall(r'(?m)^\s+(?!noreply|postmaster)(\w+)', \
+        """
+        sales@phptr.com,
+        postmaster@phptr.com,
+        eng@phptr.com,
+        noreply@phptr.com,
+        admin@phptr.com
+        """))
+
+print(['%s@awe.com' % e.group(1) for e in \
+        re.finditer(r'(?m)^\s+(?!noreply|postmaster)(\w+)', \
+        """
+        sales@phptr.com,
+        postmaster@phptr.com,
+        eng@phptr.com,
+        noreply@phptr.com,
+        admin@phptr.com
+        """)])
+
