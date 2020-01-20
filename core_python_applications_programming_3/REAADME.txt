@@ -1,0 +1,1 @@
+reference code from http://cpp.wesc.webfactional.com/cpp3ev2/
