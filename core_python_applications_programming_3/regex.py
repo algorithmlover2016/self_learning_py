@@ -1,4 +1,5 @@
 import re
+# reference https://docs.python.org/zh-cn/3/library/re.html
 
 # (?x) and groups() group() group(id)
 # reference https://www.zhihu.com/question/40865347
@@ -74,4 +75,20 @@ print(['%s@awe.com' % e.group(1) for e in \
         noreply@phptr.com,
         admin@phptr.com
         """)])
+
+print(bool(re.search(r'(?:(x)|y)(?(1)y|x)', 'xy')))
+print(bool(re.search(r'(?:(x)|y)(?(1)y|x)', 'yx')))
+print(bool(re.search(r'(?:(x)|y)(?(1)y|x)', 'xx')))
+
+# group
+print(re.search(r'\((?P<areacode>\d{3})\) (?P<prefix>\d{3})-(?:\d{4})', \
+            '(800) 555-1212').groupdict())
+
+mSearch = re.search(r'\((?P<areacode>\d{3})\) (?P<prefix>\d{3})-(?:\d{4})', \
+            '(800) 555-1212')
+
+print(mSearch.groupdict().get("prefix"))
+print(mSearch.group("prefix"))
+print(mSearch.group())
+
 
